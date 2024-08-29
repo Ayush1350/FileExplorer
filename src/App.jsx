@@ -1,127 +1,161 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { FaFolder, FaFile } from "react-icons/fa";
-import { AiOutlinePlus, AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import "./App.css";
+import { v4 as uuidv4 } from "uuid";
 
 function FileExplorer() {
-  const [toggle, setToggle] = useState(false);
-  const [iconToggle, setIconToggle] = useState("");
+  const [toggle, setToggle] = useState({
+    value: false,
+    icon: "",
+  });
   const [text, setText] = useState("");
   const [selectedParent, setSelectedParent] = useState(null);
+  const [renameId, setRenameId] = useState(null);
+  const [renameText, setRenameText] = useState("");
 
   const [files, setFiles] = useState([
     {
       name: "root",
       type: "folder",
+      id: uuidv4(),
       children: [],
     },
   ]);
 
   const handleAddFolderClick = (parent) => {
-    setIconToggle("FaFolder");
-    setText("");
-    setToggle(true);
-    setSelectedParent(parent);
-  };
+    console.log(parent);
 
-  const handleAddFileClick = (parent) => {
-    setIconToggle("FaFile");
     setText("");
-    setToggle(true);
+    setToggle({ value: true, icon: "Folder" });
     setSelectedParent(parent);
   };
 
   const handleAddFolder = () => {
-    if (iconToggle === "FaFolder" && selectedParent) {
-      const folderName = text;
-      if (folderName) {
-        const newFolder = {
-          name: folderName,
-          type: "folder",
-          children: [],
-        };
-        selectedParent.children.push(newFolder);
-        setFiles([...files]);
-        setToggle(false);
-        setSelectedParent(null);
-      }
+    const folderName = text;
+    if (folderName) {
+      const newFolder = {
+        name: folderName,
+        id: uuidv4(),
+        type: "folder",
+        children: [],
+      };
+      selectedParent.children.push(newFolder);
+      setToggle(false);
+      setSelectedParent(null);
     }
+  };
+
+  const handleAddFileClick = (parent) => {
+    setText("");
+    setToggle({ value: true, icon: "File" });
+    setSelectedParent(parent);
   };
 
   const handleAddFile = () => {
-    if (iconToggle === "FaFile" && selectedParent) {
-      const fileName = text;
-      if (fileName) {
-        const newFile = {
-          name: fileName,
-          type: "file",
-        };
-        selectedParent.children.push(newFile);
-        setFiles([...files]);
-        setToggle(false);
-        setSelectedParent(null);
-      }
+    const fileName = text;
+    if (fileName) {
+      const newFile = {
+        name: fileName,
+        type: "file",
+        id: uuidv4(),
+      };
+      selectedParent.children.push(newFile);
+      setToggle(false);
+      setSelectedParent(null);
     }
   };
 
-  const handleDeleteFile = (parent, index) => {
-    parent.children.splice(index, 1);
+  const handleDeleteFile = (parent, id) => {
+    console.log(parent);
+    console.log(id);
+    parent.children = parent.children.filter((child) => child.id !== id);
     setFiles([...files]);
   };
 
-  const handleDeleteFolder = (child, childIndex, parent) => {
-    parent.children.splice(childIndex, 1);
+  const handleDeleteFolder = (parent, id) => {
+    console.log(parent);
+    console.log(id);
+    parent.children = parent.children.filter((child) => child.id !== id);
     setFiles([...files]);
   };
 
-  const handleRename = (parent, index) => {
-    const newName = text;
-    if (newName) {
-      parent.children[index].name = newName;
+  const handleRenameClick = (parent, id) => {
+    const child = parent.children.find((child) => child.id === id);
+    setRenameId(id);
+    setRenameText(child.name);
+  };
+
+  const handleRename = (parent, id) => {
+    if (renameText) {
+      const child = parent.children.find((child) => child.id === id);
+      child.name = renameText;
       setFiles([...files]);
+      setRenameId(null);
+      setRenameText("");
     }
   };
 
   const renderChildren = (children, parent) => {
     return (
       <ul>
-        {children.map((child, childIndex) => (
-          <React.Fragment key={childIndex}>
+        {children.map((child) => (
+          <div key={child.id}>
             <li>
-              <span>{child.name}</span>
-              {child.type === "folder" && (
+              {renameId === child.id ? (
                 <>
-                  <FaFolder
-                    className="icon"
-                    onClick={() => handleAddFolderClick(child)}
-                  />
-                  <FaFile
-                    className="icon"
-                    onClick={() => handleAddFileClick(child)}
-                  />
-                  <AiOutlineDelete
-                    className="icon"
-                    onClick={() =>
-                      handleDeleteFolder(child, childIndex, parent)
-                    }
-                  />
-                  {renderChildren(child.children, child)}
-                </>
-              )}
-              {child.type === "file" && (
-                <>
-                  <AiOutlineDelete
-                    className="icon"
-                    onClick={() => handleDeleteFile(parent, childIndex)}
-                  />
-                  <AiOutlinePlus
-                    className="icon"
-                    onClick={() => handleRename(parent, childIndex)}
+                  <input
+                    type="text"
+                    value={renameText}
+                    onChange={(e) => setRenameText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleRename(parent, child.id);
+                      }
+                    }}
+                    autoFocus
                   />
                 </>
+              ) : (
+                <>
+                  <span>{child.name}</span>
+                  {child.type === "folder" && (
+                    <>
+                      <FaFolder
+                        className="icon"
+                        onClick={() => handleAddFolderClick(child)}
+                      />
+                      <FaFile
+                        className="icon"
+                        onClick={() => handleAddFileClick(child)}
+                      />
+                      <AiOutlineEdit
+                        className="icon"
+                        onClick={() => handleRenameClick(parent, child.id)}
+                      />
+                      <AiOutlineDelete
+                        className="icon"
+                        onClick={() => handleDeleteFolder(parent, child.id)}
+                      />
+                    </>
+                  )}
+                  {child.type === "file" && (
+                    <>
+                      <AiOutlineEdit
+                        className="icon"
+                        onClick={() => handleRenameClick(parent, child.id)}
+                      />
+                      <AiOutlineDelete
+                        className="icon"
+                        onClick={() => handleDeleteFile(parent, child.id)}
+                      />
+                    </>
+                  )}
+                </>
               )}
+              {child.type === "folder" && renderChildren(child.children, child)}
             </li>
-          </React.Fragment>
+          </div>
         ))}
       </ul>
     );
@@ -130,8 +164,8 @@ function FileExplorer() {
   return (
     <div className="fileExplorer">
       <ul>
-        {files.map((item, index) => (
-          <li key={index}>
+        {files.map((item) => (
+          <li key={item.id}>
             <div>
               <span>{item.name}</span>
               <FaFolder
@@ -142,20 +176,20 @@ function FileExplorer() {
                 className="icon"
                 onClick={() => handleAddFileClick(item)}
               />
-              <AiOutlinePlus className="icon" />
             </div>
             <div>{renderChildren(item.children, item)}</div>
-            {toggle && (
+            {toggle.value && (
               <div>
                 <input
                   type="text"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
+                  autoFocus
                 />
-                {iconToggle === "FaFolder" ? (
-                  <FaFolder onClick={handleAddFolder} />
+                {toggle.icon == "Folder" ? (
+                  <FaFolder className="icon" onClick={handleAddFolder} />
                 ) : (
-                  <FaFile onClick={handleAddFile} />
+                  <FaFile className="icon" onClick={handleAddFile} />
                 )}
               </div>
             )}
