@@ -1,6 +1,6 @@
 # File Explorer
 
-A simple file explorer application built with React and Vite that allows users to create, rename, and delete folders and files in a hierarchical structure.
+A simple file explorer application built with Vite that allows users to create, rename, and delete folders and files in a hierarchical structure.
 
 ## Features
 
@@ -13,29 +13,6 @@ A simple file explorer application built with React and Vite that allows users t
 ## Demo
 
 ![File Explorer Demo](public/image.png)
-
-
-To update the README.md for your File Explorer project to reflect the use of Vite for setup with React, you can modify it as follows:
-
-markdown
-Copy code
-# File Explorer
-
-A simple file explorer application built with React and Vite that allows users to create, rename, and delete folders and files in a hierarchical structure.
-
-## Features
-
-- **Create Folders:** Add new folders within existing folders.
-- **Create Files:** Add new files within existing folders.
-- **Rename:** Rename any folder or file.
-- **Delete:** Remove any folder or file from the hierarchy.
-- **Real-time Updates:** The file structure updates in real-time as changes are made.
-
-## Demo
-
-![File Explorer Demo](./demo.gif)
-
-
 
 ## Usage
 - Click the folder icon (📁) next to a folder to add a new folder inside it.
