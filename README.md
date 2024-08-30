@@ -1,8 +1,64 @@
-# React + Vite
+# File Explorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple file explorer application built with React and Vite that allows users to create, rename, and delete folders and files in a hierarchical structure.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Create Folders:** Add new folders within existing folders.
+- **Create Files:** Add new files within existing folders.
+- **Rename:** Rename any folder or file.
+- **Delete:** Remove any folder or file from the hierarchy.
+- **Real-time Updates:** The file structure updates in real-time as changes are made.
+
+## Demo
+
+![File Explorer Demo](public/image.png)
+
+
+To update the README.md for your File Explorer project to reflect the use of Vite for setup with React, you can modify it as follows:
+
+markdown
+Copy code
+# File Explorer
+
+A simple file explorer application built with React and Vite that allows users to create, rename, and delete folders and files in a hierarchical structure.
+
+## Features
+
+- **Create Folders:** Add new folders within existing folders.
+- **Create Files:** Add new files within existing folders.
+- **Rename:** Rename any folder or file.
+- **Delete:** Remove any folder or file from the hierarchy.
+- **Real-time Updates:** The file structure updates in real-time as changes are made.
+
+## Demo
+
+![File Explorer Demo](./demo.gif)
+
+
+
+## Usage
+- Click the folder icon (📁) next to a folder to add a new folder inside it.
+- Click the file icon (📄) next to a folder to add a new file inside it.
+- Click the edit icon (✏️) next to any folder or file to rename it.
+- Click the delete icon (🗑️) next to any folder or file to delete it.
+
+## Code Structure
+- FileExplorer.js: The main component that handles the file and folder management logic.
+- App.css: Contains the styling for the application, including custom icon colors and layout.
+
+## Technologies Used
+- React: For building the user interface.
+- Vite: For fast development and build tooling.
+- React Icons: For icons used in the file explorer (FaFolder, FaFile, AiOutlineDelete, AiOutlineEdit).
+- UUID: For generating unique IDs for files and folders.
+
+## Vite Plugins
+- This project uses Vite for fast development and build tooling. Vite supports two official plugins for React:
+
+- @vitejs/plugin-react: Uses Babel for Fast Refresh.
+- @vitejs/plugin-react-swc: Uses SWC for Fast Refresh.
+
+## Credits
+
+**Created by Ayush Patel.**
